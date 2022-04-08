@@ -201,7 +201,7 @@ hook OnScriptInit() {
 	}
 }
 
-static stock bool:TDC_GetNextColour(str[], &start, &end) {
+static stock bool:TDC_GetNextColour(const str[], &start, &end) {
 	new RegexMatch:m;
 	if (Regex_Search(str, gRegex, m, start, end)) {
 		start = start + end;
@@ -212,7 +212,7 @@ static stock bool:TDC_GetNextColour(str[], &start, &end) {
 	}
 }
 
-static stock TDC_GetColour(str[]) {
+static stock TDC_GetColour(const str[]) {
 	new colour = 0;
 	for (new i = 0; i < 6; i++) {
 		colour = colour << 4;
@@ -227,7 +227,7 @@ static stock TDC_GetColour(str[]) {
 	return colour * 256 + 0xFF;
 }
 
-static stock Text:TDC_ShowGlobal(BitArray:players<MAX_PLAYERS>, Float:x, Float:y, text[], font, alignment, Float:width, Float:height, shadow, outline, bool:prop, Float:fontx, Float:fonty, bool:box, colour, bg, bc, modelindex, Float:fRotX, Float:fRotY, Float:fRotZ, Float:fZoom, color1, color2, bool:select) {
+static stock Text:TDC_ShowGlobal(BitArray:players<MAX_PLAYERS>, Float:x, Float:y, const text[], font, alignment, Float:width, Float:height, shadow, outline, bool:prop, Float:fontx, Float:fonty, bool:box, colour, bg, bc, modelindex, Float:fRotX, Float:fRotY, Float:fRotZ, Float:fZoom, color1, color2, bool:select) {
 	new Text:t = TextDrawCreate(x, y, text);
 	TextDrawLetterSize(t, fontx, fonty),
 	TextDrawAlignment(t, alignment),
@@ -252,7 +252,7 @@ static stock Text:TDC_ShowGlobal(BitArray:players<MAX_PLAYERS>, Float:x, Float:y
 	return t;
 }
 
-static stock PlayerText:TDC_ShowPlayer(playerid, Float:x, Float:y, text[], font, alignment, Float:width, Float:height, shadow, outline, bool:prop, Float:fontx, Float:fonty, bool:box, colour, bg, bc, modelindex, Float:fRotX, Float:fRotY, Float:fRotZ, Float:fZoom, color1, color2, bool:select) {
+static stock PlayerText:TDC_ShowPlayer(playerid, Float:x, Float:y, const text[], font, alignment, Float:width, Float:height, shadow, outline, bool:prop, Float:fontx, Float:fonty, bool:box, colour, bg, bc, modelindex, Float:fRotX, Float:fRotY, Float:fRotZ, Float:fZoom, color1, color2, bool:select) {
 	new PlayerText:t = CreatePlayerTextDraw(playerid, x, y, text);
 	PlayerTextDrawLetterSize(playerid, t, fontx, fonty),
 	PlayerTextDrawAlignment(playerid, t, alignment),
@@ -296,7 +296,7 @@ stock Float:TDC_GetCharacterWidth(font, c, bool:prop, Float:outline, Float:fontx
 	}
 }
 
-stock Float:TDC_GetStringWidth(font, string[], bool:prop, Float:outline, Float:fontx) {
+stock Float:TDC_GetStringWidth(font, const string[], bool:prop, Float:outline, Float:fontx) {
 	new Float:width = 0.0;
 	for (new i = 0; string[i]; i++) {
 		width += TDC_GetCharacterWidth(font, string[i], prop, outline, fontx);
@@ -304,7 +304,7 @@ stock Float:TDC_GetStringWidth(font, string[], bool:prop, Float:outline, Float:f
 	return width;
 }
 
-static stock TDC_GetLineEnd(font, text[], pos, Float:max, bool:prop, Float:outline, Float:fontx, &Float:measured) {
+static stock TDC_GetLineEnd(font, const text[], pos, Float:max, bool:prop, Float:outline, Float:fontx, &Float:measured) {
 	new bool:end = false;
 	new last = pos;
 	new Float:width = 0.0;
@@ -588,7 +588,7 @@ static stock TDC_UpdatePlayer(playerid, id) {
 	}
 }
 
-stock Text:TDC_TextDrawCreate(Float:x, Float:y, text[]) {
+stock Text:TDC_TextDrawCreate(Float:x, Float:y, const text[]) {
 	static style[e_TDC_ENUM] = { false, 0.0, 0.0, MEM_NULLUMPTR, 0, 0, 1, 640.0, 480.0, 2, 0, true, 0.48, 1.15, false, false, 0xE1E1E1FF, 0x000000FF, 0x000000FF, 0.0, 0.0, 0.0, 1.0, 0, -1, -1, Text:INVALID_TEXT_DRAW, MEM_NULLUMPTR, 0 };
 	for (new Text:id; id < Text:MAX_TEXT_DRAWS; ++id) {
 		//new UnmanagedPointer:slot = playerid * MAX_PLAYERS + id;
@@ -790,7 +790,7 @@ stock TDC_TextDrawHideForPlayer(playerid, Text:text) {
 	}
 }
 
-stock TDC_TextDrawSetString(Text:text, string[]) {
+stock TDC_TextDrawSetString(Text:text, const string[]) {
 	if (TDC_ValidGlobal(text)) {
 		new UnmanagedPointer:slot = gTDs[text];
 		new len = strlen(string);
@@ -804,7 +804,7 @@ stock TDC_TextDrawSetString(Text:text, string[]) {
 			MEM_UM_set_arr(mem, 0, " ", 2);
 		}
 		MEM_UM_delete(UnmanagedPointer:MEM_UM_get_val(slot, e_TDC_TEXT));
-		MEM_UM_set_val(slot, e_TDC_TEXT, mem);
+		MEM_UM_set_val(slot, e_TDC_TEXT, _:mem);
 		MEM_UM_set_val(slot, e_TDC_TEXT_LEN, len);
 		TDC_UpdateGlobal(_:text);
 	}
@@ -1025,7 +1025,7 @@ stock bool:TDC_TextDrawGetPreviewVehCol(Text:text, &color1, &color2) {
 	}
 }
 
-stock PlayerText:TDC_PlayerTDCreate(playerid, Float:x, Float:y, text[]) {
+stock PlayerText:TDC_PlayerTDCreate(playerid, Float:x, Float:y, const text[]) {
 	static style[e_TDC_ENUM] = { false, 0.0, 0.0, MEM_NULLUMPTR, 0, 0, 1, 640.0, 480.0, 2, 0, true, 0.48, 1.15, false, false, 0xE1E1E1FF, 0x000000FF, 0x000000FF, 0.0, 0.0, 0.0, 1.0, 0, -1, -1, Text:INVALID_TEXT_DRAW, MEM_NULLUMPTR, 0 };
 	for (new PlayerText:id; id < PlayerText:MAX_TEXT_DRAWS; ++id) {
 		//new UnmanagedPointer:slot = playerid * MAX_PLAYERS + id;
@@ -1191,7 +1191,7 @@ stock TDC_PlayerTDHide(playerid, PlayerText:text) {
 	}
 }
 
-stock TDC_PlayerTDSetString(playerid, PlayerText:text, string[]) {
+stock TDC_PlayerTDSetString(playerid, PlayerText:text, const string[]) {
 	if (TDC_ValidPlayer(playerid, text)) {
 		new UnmanagedPointer:slot = gPlayerTDs[playerid][text];
 		new len = strlen(string);
@@ -1200,12 +1200,12 @@ stock TDC_PlayerTDSetString(playerid, PlayerText:text, string[]) {
 			return;
 		}
 		if (len) {
-			MEM_UM_set_arr(mem, 0, text, len + 1);
+			MEM_UM_set_arr(mem, 0, string, len + 1);
 		} else {
 			MEM_UM_set_arr(mem, 0, " ", 2);
 		}
 		MEM_UM_delete(UnmanagedPointer:MEM_UM_get_val(slot, e_TDC_TEXT));
-		MEM_UM_set_val(slot, e_TDC_TEXT, mem);
+		MEM_UM_set_val(slot, e_TDC_TEXT, _:mem);
 		MEM_UM_set_val(slot, e_TDC_TEXT_LEN, len);
 		TDC_UpdatePlayer(playerid, _:text);
 	}
