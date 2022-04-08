@@ -799,7 +799,7 @@ stock TDC_TextDrawSetString(Text:text, const string[]) {
 			return;
 		}
 		if (len) {
-			MEM_UM_set_arr(mem, 0, text, len + 1);
+			MEM_UM_set_arr(mem, 0, string, len + 1);
 		} else {
 			MEM_UM_set_arr(mem, 0, " ", 2);
 		}
